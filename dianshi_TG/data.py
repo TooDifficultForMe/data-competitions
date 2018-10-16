@@ -1,5 +1,4 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = ''
 import torch
 from PIL import Image
 import pandas as pd
@@ -39,14 +38,18 @@ class TGDataset(Dataset):
     def __getitem__(self, index):
         img = self._im_read(self.img_path + self.X_train[index] + self.img_ext)
         img = self.transform(img)
-        label = torch.from_numpy(self.y_train[index])
+        label = torch.from_numpy(self.y_train[index].astype(np.int64))
         return img, label
-
+    
     def __len__(self):
         return len(self.X_train.index)
 
 class data_reader(object):
     def __init__(self, args, CSV_PATH, training=True):
+        """
+            args: need to have attr path and bs(batchsize)
+            for example usage see data.ipynb
+        """
         self.args = args
         self.path = args.path
         self.csv_path = CSV_PATH
@@ -72,9 +75,10 @@ class data_reader(object):
         return train_df, val_df, mlb
         
     def get_train_loader(self):
-        assert self.training, "In training mode!"
+        assert self.training, "Not in training mode!"
         self.train_dataset = TGDataset(self.train_df, self.path, '', self.trm, self.mlb)
         self.val_dataset = TGDataset(self.val_df, self.path, '', self.trm, self.mlb)
         self.train_loader = DataLoader(self.train_dataset, batch_size=self.args.bs, shuffle=True, num_workers=1)
         self.val_loader = DataLoader(self.val_dataset, batch_size=self.args.bs, shuffle=True, num_workers=1)
         return self.train_loader, self.val_loader
+    
