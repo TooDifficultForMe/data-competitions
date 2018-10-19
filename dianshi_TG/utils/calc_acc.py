@@ -21,4 +21,4 @@ def calc_acc(label, gt_label):
     print(incor_cls)
     
     ans_list = list(zip(incor_idx, incor_pred, incor_cls, cor_cls))
-    return sorted(ans_list, key = lambda x: -x[1])
+    return acc, sorted(ans_list, key = lambda x: -x[1])
