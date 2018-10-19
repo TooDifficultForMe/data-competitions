@@ -15,4 +15,4 @@ class Densenet(nn.Module):
 							 self.relu,
 							 nn.AvgPool2d(kernel_size = 7,
 										  stride = 1),
-							 self.fc)
+							 self.fc)(x)

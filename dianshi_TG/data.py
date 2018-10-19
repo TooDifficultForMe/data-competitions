@@ -45,7 +45,7 @@ class TGDataset(Dataset):
         return len(self.X_train.index)
 
 class data_reader(object):
-    def __init__(self, args, CSV_PATH, training=True):
+    def __init__(self, args, CSV_PATH, training=True, trm=None, val_trm=None):
         """
             args: need to have attr path and bs(batchsize)
             for example usage see data.ipynb
@@ -55,15 +55,23 @@ class data_reader(object):
         self.csv_path = CSV_PATH
         self.training = training
         self.train_df, self.val_df, self.mlb = self._read_csv()
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
-        self.trm = transforms.Compose([
-            transforms.Resize(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            transforms.ToTensor(),
-            normalize
-        ])
+        if trm == None:    
+            normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                         std=[0.229, 0.224, 0.225])
+            self.trm = transforms.Compose([
+                transforms.Resize(224),
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
+                transforms.ToTensor(),
+                normalize
+            ])
+        else:
+            self.trm = trm
+            
+        if val_trm == None:
+            self.val_trm = self.trm
+        else:
+            self.val_trm = val_trm
         
     def _read_csv(self):
         data_df = pd.read_csv(self.csv_path, header=None)
@@ -77,7 +85,7 @@ class data_reader(object):
     def get_train_loader(self):
         assert self.training, "Not in training mode!"
         self.train_dataset = TGDataset(self.train_df, self.path, '', self.trm, self.mlb)
-        self.val_dataset = TGDataset(self.val_df, self.path, '', self.trm, self.mlb)
+        self.val_dataset = TGDataset(self.val_df, self.path, '', self.val_trm, self.mlb)
         self.train_loader = DataLoader(self.train_dataset, batch_size=self.args.bs, shuffle=True, num_workers=1)
         self.val_loader = DataLoader(self.val_dataset, batch_size=self.args.bs, shuffle=True, num_workers=1)
         return self.train_loader, self.val_loader
