@@ -49,7 +49,7 @@ class trainer(_base_trainer):
         super(trainer, self).__init__(model, epoch, train_loader, test_loader, optim,
                                      loss_func, model_name, save)
     
-    def train(self):
+    def train(self, verbose=True):
         for epoch in range(self.epoch):
             epoch_loss = 0
             total, correct = 0, 0
@@ -64,7 +64,7 @@ class trainer(_base_trainer):
                 correct += (pred == torch.max(y_train, 1)[1]).sum().item()
                 total += X_train.size(0)
                 epoch_loss += loss.item() / len(self.train_loader)
-                print('\rEpoch {} | Batch # {} Train Loss {:.5f} '.format(epoch, batch_idx, loss.item()))
+                if verbose: print('\rEpoch {} | Batch # {} Train Loss {:.5f} '.format(epoch, batch_idx, loss.item()))
             print('\rEpoch {} | Epoch Train Loss {:.5f}'.format(epoch, epoch_loss))
             epoch_acc = correct / total * 100
             print('\nEpoch {} | Epoch Train Acc {:.3f}%'.format(epoch, epoch_acc))
@@ -111,7 +111,7 @@ class cyc_trainer(_base_trainer):
     def _cos_annealing_lr(self, initial_lr, cur_epoch, epoch_per_cycle):
         return initial_lr * (np.cos(np.pi * cur_epoch / epoch_per_cycle) + 1) / 2
     
-    def train(self):
+    def train(self, verbose=True):
         for cycle in range(self.n_cycle):
             print('Snapshot# ', cycle)
             self.epoch_per_cycle += self.cycle_add
@@ -133,7 +133,7 @@ class cyc_trainer(_base_trainer):
                     correct += (pred == torch.max(y_train, 1)[1]).sum().item()
                     total += X_train.size(0)
                     epoch_loss += loss.item() / len(self.train_loader)
-                    print('\rCycle {} | Epoch {} | Batch # {} Train Loss {:.5f} '.format(cycle, epoch, batch_idx, loss.item()))
+                    if verbose: print('\rCycle {} | Epoch {} | Batch # {} Train Loss {:.5f} '.format(cycle, epoch, batch_idx, loss.item()))
                 print('\rCycle {} | Epoch {} | Epoch Train Loss {:.5f}'.format(cycle, epoch, epoch_loss))
                 epoch_acc = correct / total * 100
                 print('\nCycle {} | Epoch {} | Epoch Train Acc {:.3f}%'.format(cycle, epoch, epoch_acc))
