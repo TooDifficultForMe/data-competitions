@@ -12,7 +12,7 @@ from data import data_reader
 
 Tensor = torch.Tensor
 rand_m = np.random.random
-
+MODEL_NAME = "pnasnet5large"
 class model_pnas(nn.Module):
     def __init__(self, num_class):
         super(model_pnas, self).__init__()
@@ -65,7 +65,7 @@ train_acc_rec = []
 test_loss_rec = []
 test_acc_rec = []
 best_acc = 0
-for epoch in range(50):
+for epoch in range(100):
     epoch_loss = 0
     total, correct = 0, 0
     for batch_idx, (X_train, y_train) in enumerate(train_loader):
