@@ -88,7 +88,8 @@ class trainer(_base_trainer):
                 if test_epoch_acc > self.best_acc:
                     self.best_acc = test_epoch_acc
                     if self.save:
-                        torch.save(self.model.state_dict(), 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(best_acc)) 
+                        if verbose: print('weight save to ' + 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(self.best_acc))
+                        torch.save(self.model.state_dict(), 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(self.best_acc)) 
                 print('Epoch {} | Epoch Val Loss {:.5f}'.format(epoch, test_epoch_loss))
                 print('Epoch {} | Epoch Val Acc {:.3f}%'.format(epoch, test_epoch_acc))
             
@@ -157,7 +158,8 @@ class cyc_trainer(_base_trainer):
                     if test_epoch_acc > self.best_acc:
                         self.best_acc = test_epoch_acc
                         if self.save:
-                            torch.save(self.model.state_dict(), 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(best_acc)) 
+                            if verbose: print('weight save to ' + 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(self.best_acc))
+                            torch.save(self.model.state_dict(), 'weights/' + self.model_name + '/best_params_acc{}.pth'.format(self.best_acc)) 
                     print('Cycle {} | Epoch {} | Epoch Val Loss {:.5f}'.format(cycle, epoch, test_epoch_loss))
                     print('Cycle {} | Epoch {} | Epoch Val Acc {:.3f}%'.format(cycle, epoch, test_epoch_acc))
             
