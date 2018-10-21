@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from models.gcn import gcn
 from torchvision import models, transforms
 
 class model_resnet34(nn.Module):
-    def __init__(self, num_class, use_gcn=False):
+    def __init__(self, num_class):
         super(model_resnet34, self).__init__()
         self.resnet = models.resnet34(pretrained=True)
-        self.argp = nn.AdaptiveAvgPool2d(1) if use_gcn is False else gcn(512, 7)
+        self.argp = nn.AdaptiveAvgPool2d(1)
         self.fc = nn.Linear(512, num_class)
     
     def forward(self, x):
