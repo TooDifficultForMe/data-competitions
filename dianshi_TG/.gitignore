@@ -1,0 +1,7 @@
+*.csv
+train_pnasnet.py
+play.ipynb
+__pycache__/
+train2000/
+test1000/
+weights/

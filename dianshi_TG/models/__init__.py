@@ -5,3 +5,4 @@ from .resnet34 import model_resnet34
 from .resnet50 import model_resnet50
 from .xception import model_xception
 from .ensemble import ensemble
+from .seresnet import model_seresnet
